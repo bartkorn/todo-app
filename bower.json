@@ -1,0 +1,10 @@
+{
+  "name": "todo_app",
+  "description": "Simple TODO App",
+  "main": "index.html",
+  "authors": [
+    "bartkorn"
+  ],
+  "license": "MIT",
+  "homepage": ""
+}

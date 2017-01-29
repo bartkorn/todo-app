@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>TO DO App</title>
+    <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="main.css" rel="stylesheet">
+    <link href="todos.css" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/3.6.4/firebase.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/3.6.1/firebase-database.js"></script>
+    <script type="text/javascript" src="bower_components/jquery/dist/jquery.js"></script>
+    <script type="text/javascript" src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="todo.js"></script>
+    <script type="text/javascript" src="mvc.js"></script>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- To Do Add Success -->
+    <div id="addTodoSuccess" class="alert alert-info alert-dismissible" role="alert" style="display: none;">
+        <button type="button" class="close" onclick="closeSuccessMessage()" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <strong>Done !</strong> New ToDo has been added to your list.
+    </div>
+
+    <!-- To Do Add Warning -->
+    <div id="addTodoWarning" class="alert alert-warning alert-dismissible" role="alert" style="display: none;">
+        <button type="button" class="close" onclick="closeWarningMessage()" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <strong>Uppps !</strong> Something went wrong, try once again.
+    </div>
+
+    <!-- Navigation panel -->
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#menu-mobile" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="index.html">
+                    <i class="fa fa-check-square-o fa-lg" aria-hidden="true"></i>
+                    TODO App
+                </a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="todos.html">Todos</a></li>
+                    <li><a href="#">Settings</a></li>
+                    <li><a href="#">Users</a></li>
+                </ul>
+                <button id="add-todo-button" type="button" class="btn btn-success navbar-btn"  data-toggle="modal" data-target="#addToDoModal">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                    Add TODO
+                </button>
+            </div>
+        </div>
+    </nav>
+    <div class="collapse" id="menu-mobile">
+        <div class="list-group">
+            <a href="todos.html" class="list-group-item">Todos</a>
+            <a href="#" class="list-group-item">Settings</a>
+            <a href="#" class="list-group-item">Users</a>
+            <button type="button" class="btn btn-success navbar-btn"  data-toggle="modal" data-target="#addToDoModal">
+                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                Add TODO
+            </button>
+        </div>
+    </div>
+
+    <!--Action buttons -->
+    <div class="btn-group">
+        <button type="button" class="btn btn-default">Actions</button>
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span class="caret"></span>
+            <span class="sr-only">Toggle Dropdown</span>
+        </button>
+        <ul class="dropdown-menu">
+            <li><a id="sortPriority" href="#">Sort by priority</a></li>
+            <li><a id="filterPrivate" href="#">Show private</a></li>
+            <li><a href="#">Export</a></li>
+        </ul>
+    </div>
+    <button type="button" class="btn btn-default" id="refresh">
+        <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+        Refresh
+    </button>
+
+    <!-- Main component for a primary marketing message or call to action -->
+    <main>
+        <div class="container-fluid">
+            <div class="row" id="main">
+
+            </div>
+        </div>
+    </main>
+
+    <!-- Add To Do Modal -->
+    <div class="modal fade" id="addToDoModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <i class="fa fa-check-square-o fa-2x" aria-hidden="true"></i><h4 class="modal-title" id="myModalLabel">New TODO</h4>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="title">TO DO Title</label>
+                            <input type="text" id="title" placeholder="Title" class="form-control">
+                        </div>
+                    </form>
+                    <form>
+                        <div class="form-group">
+                            <label for="description">Description</label>
+                            <textarea class="form-control" rows="3" id="description" placeholder="Describe your task"></textarea>
+                        </div>
+                    </form>
+                    <div class="form-group">
+                        <label for="owner">Name</label>
+                        <input type="text" class="form-control" id="owner" placeholder="Owner">
+                    </div>
+                    <div class="form-group">
+                        <label for="category">Category</label>
+                        <select class="form-control" id="category">
+                            <option>Private</option>
+                            <option>Job</option>
+                            <option>Sport</option>
+                            <option>Shopping</option>
+                            <option>Learning</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="priority">Category</label>
+                        <select class="form-control" id="priority">
+                            <option value="4">Urgent</option>
+                            <option value="3">High</option>
+                            <option value="2">Medium</option>
+                            <option value="1">Low</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="add" data-dismiss="modal">Add TODO</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmationModal" class="modal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                Item added
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,22 @@
+body {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.navbar {
+    margin-bottom: 20px;
+}
+
+div#navbar button {
+    margin-left: 10px;
+}
+
+.modal-header {
+    background-color: #337ab7;
+    border-bottom: solid 1px #000;
+}
+
+.modal-header i {
+    float: left;
+    margin-right: 10px;
+}
